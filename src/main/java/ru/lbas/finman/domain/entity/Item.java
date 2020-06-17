@@ -1,4 +1,6 @@
-package ru.lbas.financemanager.domain.entity;
+package ru.lbas.finman.domain.entity;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Товар
@@ -9,12 +11,18 @@ public class Item {
     String unit;          // ед. измерения (кг, штуки…)
     String description;   // описание
 
-    public Item(Long id, String name, String unit, String description) {
-        this.id = id;
+    public Item(String name, String unit, String description) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.unit = unit;
         this.description = description;
     }
+    public Item(String name, String unit) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
+        this.name = name;
+        this.unit = unit;
+    }
+
 
     public Long getId() {
         return id;

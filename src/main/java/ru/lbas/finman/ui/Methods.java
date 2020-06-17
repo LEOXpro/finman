@@ -1,4 +1,4 @@
-package ru.lbas.financemanager.ui;
+package ru.lbas.finman.ui;
 
 public interface Methods {
     void viewItems();
@@ -12,6 +12,7 @@ public interface Methods {
     void addIncome();
     void deliteIncome();
 
+    void veiwInfoItemsDate();
     void veiwInfoItemsMonth();
 
     void viewBalanceMonth();

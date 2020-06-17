@@ -1,6 +1,8 @@
-package ru.lbas.financemanager.domain.entity;
+package ru.lbas.finman.domain.entity;
 
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
 * Cчет
  */
@@ -10,6 +12,10 @@ public class Bill {
 
     public Bill(Long id, Date billDate) {
         this.id = id;
+        this.billDate = billDate;
+    }
+    public Bill(Date billDate) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.billDate = billDate;
     }
 
