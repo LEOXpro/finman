@@ -1,6 +1,7 @@
-package ru.lbas.financemanager.domain.entity;
+package ru.lbas.finman.domain.entity;
 
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Цена товара
@@ -14,10 +15,15 @@ public class ItemPrice {
     Date actualTill;     // дата действия цены
     Double price;        // стоимость единицы товара
 
-    public ItemPrice(Long id, Long itemId, Date actualTill, Double price) {
-        this.id = id;
+    public ItemPrice(Long itemId, Date actualTill, Double price) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.itemId = itemId;
         this.actualTill = actualTill;
+        this.price = price;
+    }
+    public ItemPrice(Long itemId, Double price) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
+        this.itemId = itemId;
         this.price = price;
     }
 

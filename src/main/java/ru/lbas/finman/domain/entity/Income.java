@@ -1,6 +1,7 @@
-package ru.lbas.financemanager.domain.entity;
+package ru.lbas.finman.domain.entity;
 
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * приход
@@ -12,12 +13,18 @@ public class Income {
     String name;          // наименование
     String description;   // описание
 
-    public Income(Long id, Date data, Double amount, String name, String description) {
-        this.id = id;
+    public Income(Date data, Double amount, String name, String description) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.data = data;
         this.amount = amount;
         this.name = name;
         this.description = description;
+    }
+    public Income(Date data, Double amount, String name) {
+        this.id = id;
+        this.data = data;
+        this.amount = amount;
+        this.name = name;
     }
 
     public Long getId() {

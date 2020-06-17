@@ -1,4 +1,6 @@
-package ru.lbas.financemanager.domain.entity;
+package ru.lbas.finman.domain.entity;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Содержание Счета
@@ -10,11 +12,23 @@ public class BillList {
     Integer quantity;       // кол-во
     Double purchaseAmount;  // сумма покупки
 
-    public BillList(Long id, Long billId, Long itemId, Integer quantity, Double purchaseAmount) {
-        this.id = id;
+    public BillList(Long billId, Long itemId, Integer quantity, Double purchaseAmount) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.billId = billId;
         this.itemId = itemId;
         this.quantity = quantity;
+        this.purchaseAmount = purchaseAmount;
+    }
+    public BillList(Long billId, Long itemId, Integer quantity) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
+        this.billId = billId;
+        this.itemId = itemId;
+        this.quantity = quantity;
+    }
+    public BillList(Long billId, Long itemId, Double purchaseAmount) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
+        this.billId = billId;
+        this.itemId = itemId;
         this.purchaseAmount = purchaseAmount;
     }
 
