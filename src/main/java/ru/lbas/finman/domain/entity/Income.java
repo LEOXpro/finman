@@ -8,21 +8,21 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Income {
     Long id;              // id прихода
-    Date data;            // дата
+    Date date;            // дата
     Double amount;        // сумма
     String name;          // наименование
     String description;   // описание
 
-    public Income(Date data, Double amount, String name, String description) {
+    public Income(Date date, Double amount, String name, String description) {
         this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-        this.data = data;
+        this.date = date;
         this.amount = amount;
         this.name = name;
         this.description = description;
     }
-    public Income(Date data, Double amount, String name) {
-        this.id = id;
-        this.data = data;
+    public Income(Date date, Double amount, String name) {
+        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
+        this.date = date;
         this.amount = amount;
         this.name = name;
     }
@@ -31,8 +31,8 @@ public class Income {
         return id;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDate() {
+        return date;
     }
 
     public Double getAmount() {
@@ -51,8 +51,8 @@ public class Income {
         this.id = id;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setAmount(Double amount) {

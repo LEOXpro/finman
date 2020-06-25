@@ -71,4 +71,8 @@ public class BillList {
     public void setPurchaseAmount(Double purchaseAmount) {
         this.purchaseAmount = purchaseAmount;
     }
+    @Override
+    public  String toString(){
+        return this.id + " " + this.billId + " " + this.itemId + " " + this.quantity + " " + this.purchaseAmount;
+    }
 }

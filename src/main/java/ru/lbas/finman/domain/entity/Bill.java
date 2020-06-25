@@ -34,4 +34,9 @@ public class Bill {
     public void setBillDate(Date billDate) {
         this.billDate = billDate;
     }
+
+    @Override
+    public  String toString(){
+        return " " + this.billDate;
+    }
 }

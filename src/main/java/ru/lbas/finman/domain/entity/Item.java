@@ -1,5 +1,7 @@
 package ru.lbas.finman.domain.entity;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -54,5 +56,10 @@ public class Item {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public  String toString(){
+        return this.id + " " + this.name + " " + this.unit + " " + this.description;
     }
 }
