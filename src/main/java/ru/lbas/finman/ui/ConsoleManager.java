@@ -20,7 +20,7 @@ public class ConsoleManager {
     private Map<Long, BillList> billLists = new HashMap();
     public static Integer des = 0;
 
-    public ConsoleManager(){
+    public ConsoleManager() throws Exception{
         this.ln = new Scanner(System.in);
         this.controller = new Controller();
     }
@@ -37,8 +37,9 @@ public class ConsoleManager {
         System.out.println("8 - Показать список товаров за дату");
         System.out.println("9 - Показать список товаров за месяц");
         System.out.println("10 - Показать баланс за месяц");
+        System.out.println("11 - Показать доход за все время");
         System.out.println("0 - Выход");
-        int choice = readInt(0, 10);
+        int choice = readInt(0, 11);
         return choice;
     }
 
@@ -79,6 +80,9 @@ public class ConsoleManager {
                             break;
                         case 10:
                             viewBalanceMonth();
+                            break;
+                        case 11:
+                            viewAllIncome();
                             break;
                         default:
                             throw new AssertionError();
@@ -239,13 +243,13 @@ public class ConsoleManager {
         return itemPrice;
     }
     public void addIncome() throws Exception{
-        System.out.println("Введите наименование прихода");
+        System.out.println("Введите наименование дохода");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name = reader.readLine();
-        System.out.println("Введите сумму прихода");
+        System.out.println("Введите сумму дохода");
         Double amount = Double.parseDouble(reader.readLine());
 
-        System.out.println("Хотите добавить описание прихода? (1 - Да; 2 - Нет)");
+        System.out.println("Хотите добавить описание дохода? (1 - Да; 2 - Нет)");
         String descript = null;
         des = 0;
         try {
@@ -254,7 +258,7 @@ public class ConsoleManager {
                 if (des == 2)
                     break;
                 else if (des == 1) {
-                    System.out.println("Введите описание товара");
+                    System.out.println("Введите описание дохода");
                     descript = reader.readLine();
                     break;
                 }
@@ -273,7 +277,7 @@ public class ConsoleManager {
     }
     public void deliteIncome() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Введите id прихода, который хотите удалить");
+        System.out.println("Введите id дохода, который хотите удалить");
         Long idIncome = Long.parseLong(reader.readLine());
         this.controller.deliteIncome(idIncome);
     }
@@ -290,12 +294,19 @@ public class ConsoleManager {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month-1);
         calendar.set(Calendar.DAY_OF_MONTH, day);
-        this.controller.veiwInfoBillLists(calendar);
+        this.controller.veiwInfoBillLists1(calendar);
     }
-    public void veiwInfoItemsMonth(){
-
+    public void veiwInfoItemsMonth() throws Exception{
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        this.controller.veiwInfoBillLists2(calendar);
     }
     public void viewBalanceMonth(){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        this.controller.veiwBalanceMonth(calendar);
+    }
+    public void viewAllIncome(){
 
     }
 }

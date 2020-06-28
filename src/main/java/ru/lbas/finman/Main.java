@@ -19,7 +19,7 @@ public class Main {
         File items = new File("src/main/resources/item.csv");
         PrintWriter tt = new PrintWriter(items);
         tt.print(chips.getId() + ";");
-        tt.print(chips.getName() + ";");
+        tt.print(chips.getName()g + ";");
         tt.print(chips.getUnit() + ";");
         if (chips.getDescription() != null)
         tt.print(chips.getDescription());
