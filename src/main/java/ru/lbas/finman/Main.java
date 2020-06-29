@@ -10,21 +10,5 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ConsoleManager consoleManager = new ConsoleManager();
         consoleManager.start();
-
-        /**
-         * заготовка для сохранения в файл
-         */
-        /**
-        Item chips = new Item(id, "Чипсы", "шт.");
-        File items = new File("src/main/resources/item.csv");
-        PrintWriter tt = new PrintWriter(items);
-        tt.print(chips.getId() + ";");
-        tt.print(chips.getName()g + ";");
-        tt.print(chips.getUnit() + ";");
-        if (chips.getDescription() != null)
-        tt.print(chips.getDescription());
-
-        tt.close();
-**/
     }
 }

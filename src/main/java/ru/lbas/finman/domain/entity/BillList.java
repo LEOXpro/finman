@@ -10,26 +10,21 @@ public class BillList {
     Long billId;            // ссылка на счет
     Long itemId;            // ссылка на товар
     Integer quantity;       // кол-во
-    Double purchaseAmount;  // сумма покупки
+    Double price;  // сумма покупки
 
-    public BillList(Long billId, Long itemId, Integer quantity, Double purchaseAmount) {
+    public BillList(Long billId, Long itemId, Integer quantity, Double price) {
         this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.billId = billId;
         this.itemId = itemId;
         this.quantity = quantity;
-        this.purchaseAmount = purchaseAmount;
+        this.price = price;
     }
-    public BillList(Long billId, Long itemId, Integer quantity) {
+
+    public BillList(Long billId, Long itemId, Double price) {
         this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.billId = billId;
         this.itemId = itemId;
-        this.quantity = quantity;
-    }
-    public BillList(Long billId, Long itemId, Double purchaseAmount) {
-        this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-        this.billId = billId;
-        this.itemId = itemId;
-        this.purchaseAmount = purchaseAmount;
+        this.price = price;
     }
 
     public Long getId() {
@@ -48,8 +43,8 @@ public class BillList {
         return quantity;
     }
 
-    public Double getPurchaseAmount() {
-        return purchaseAmount;
+    public Double getPrice() {
+        return price;
     }
 
     public void setId(Long id) {
@@ -68,11 +63,11 @@ public class BillList {
         this.quantity = quantity;
     }
 
-    public void setPurchaseAmount(Double purchaseAmount) {
-        this.purchaseAmount = purchaseAmount;
+    public void setPurchaseAmount(Double price) {
+        this.price = price;
     }
     @Override
     public  String toString(){
-        return this.id + " " + this.billId + " " + this.itemId + " " + this.quantity + " " + this.purchaseAmount;
+        return this.id + " " + this.billId + " " + this.itemId + " " + this.quantity + " " + this.price;
     }
 }

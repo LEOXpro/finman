@@ -14,7 +14,6 @@ public class ConsoleManager {
     private Bill bill;
     private BillList billList;
     private Item item;
-    private ItemPrice itemPrice;
     private Income income;
     private Map<Long, Bill> bills = new HashMap();
     private Map<Long, BillList> billLists = new HashMap();
@@ -38,8 +37,9 @@ public class ConsoleManager {
         System.out.println("9 - Показать список товаров за месяц");
         System.out.println("10 - Показать баланс за месяц");
         System.out.println("11 - Показать доход за все время");
+        System.out.println("12 - (временный) Тест чтения из файла");
         System.out.println("0 - Выход");
-        int choice = readInt(0, 11);
+        int choice = readInt(0, 12);
         return choice;
     }
 
@@ -83,6 +83,9 @@ public class ConsoleManager {
                             break;
                         case 11:
                             viewAllIncome();
+                            break;
+                        case 12:
+                            readFileWrite();
                             break;
                         default:
                             throw new AssertionError();
@@ -132,10 +135,10 @@ public class ConsoleManager {
             System.out.println("Введите кол-во ед. товара, если оно известно или введите - 0, если неизвестно");
             des = Integer.parseInt(reader.readLine());
             if (des == 0) {
-                billList = new BillList(id, item.getId(), itemPrice.getPrice());
+                billList = new BillList(id, item.getId(), item.getPrice());
             } else {
-                Double resultPrice = des * itemPrice.getPrice();
-                billList = new BillList(id, item.getId(), resultPrice);
+                Double resultPrice = des * item.getPrice();
+                billList = new BillList(id, item.getId(), des, resultPrice);
             }
             this.controller.createBillList(billList.getId(), billList);
             System.out.println("Добавить еще товар? 1 - Да; 2 - Нет");
@@ -180,6 +183,8 @@ public class ConsoleManager {
             edIzm = "кг.";
         else
             edIzm = "шт.";
+        System.out.println("Введите стоимость за единицу товара:");
+        Double price = Double.parseDouble(reader.readLine());
 
         System.out.println("Хотите ввести описание товара? (1 - Да; 2 - Нет)");
         String descript = "";
@@ -202,46 +207,14 @@ public class ConsoleManager {
         }
 
         if (des == 2)
-             item = new Item(nameItem, edIzm);
+             item = new Item(nameItem, edIzm, price);
         else if (des == 1)
-             item = new Item(nameItem, edIzm, descript);
+             item = new Item(nameItem, edIzm, descript, price);
         this.controller.addItem(item.getId(), item);
-        createItemPrise();
 
         return item;
     }
-    public ItemPrice createItemPrise() throws Exception{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Введите стоимость единицы товара");
-        Double price = Double.parseDouble(reader.readLine());
 
-        System.out.println("Хотите выбрать дату действия цены на товара? (1 - Да; 2 - Нет)");
-        String descript = null;
-        Date date = null;
-        des = 0;
-        try {
-            while (true) {
-                des = Integer.parseInt(reader.readLine());
-                if (des == 2)
-                    break;
-                else if (des == 1) {
-                    date = new Date();
-                    break;
-                }
-                else
-                    System.out.println("Неверно, введите '1' (Да) или '2' (Нет)");
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        if (des == 2)
-            itemPrice = new ItemPrice(item.getId(), price);
-        else if (des == 1)
-            itemPrice = new ItemPrice(item.getId(), date, price);
-
-        return itemPrice;
-    }
     public void addIncome() throws Exception{
         System.out.println("Введите наименование дохода");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -308,5 +281,8 @@ public class ConsoleManager {
     }
     public void viewAllIncome(){
 
+    }
+    public void readFileWrite() throws Exception{
+        this.controller.readFileWrite();
     }
 }

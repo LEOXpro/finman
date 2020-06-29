@@ -5,15 +5,15 @@ import ru.lbas.finman.domain.entity.BillList;
 import ru.lbas.finman.domain.entity.Income;
 import ru.lbas.finman.domain.entity.Item;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 public class Controller {
     private Calendar calendar;
     File itemsFile;
-    FileWriter tt;
+    FileWriter fWriter;
+    FileReader fReader;
+    ArrayList<String> listLine;
     private Map<Long, Bill> bills;
     private Map<Long, BillList> billLists;
     private Map<Long, Item> items;
@@ -25,13 +25,29 @@ public class Controller {
         this.incomes = new HashMap();
         this.items = new HashMap();
         this.calendar = new GregorianCalendar();
-        this.itemsFile = new File("src/main/resources/item.csv");
+        this.itemsFile = new File("src/main/resources/item.csv");  ////1
+        this.listLine = new ArrayList();
                     }
         public void viewItems() throws Exception{
         for (Map.Entry<Long, Item> entry: items.entrySet()){
             System.out.println(entry.getKey() + entry.getValue().toString());
         }
     }
+
+    /**
+     *
+     * ЗАГАТОВКА для чтения из файла. Метод считывания с файла и запись в список
+     */
+    public void readFileWrite() throws Exception{
+        fReader = new FileReader(this.itemsFile);
+        BufferedReader reader = new BufferedReader(fReader);
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            listLine.add(line);
+        }
+        System.out.println(listLine.toString());
+    }
+
 
     public void createBill(Long id, Bill bill){
         this.bills.put(id, bill);
@@ -47,15 +63,16 @@ public class Controller {
     }
     public void addItem(Long id, Item item) throws Exception{
         this.items.put(id, item);
-        tt = new FileWriter(itemsFile, true);
-        tt.write(item.getId() + ";");
-        tt.write(item.getName() + ";");
+        fWriter = new FileWriter(itemsFile, true);
+        fWriter.write(item.getId() + ";");
+        fWriter.write(item.getName() + ";");
         if (item.getDescription() != null)
-            tt.write(item.getDescription() + ";");
-        else tt.write(";");
-        tt.write(item.getUnit() + ";");
-        tt.write("\n");
-        tt.close();
+            fWriter.write(item.getDescription() + ";");
+        else fWriter.write(";");
+        fWriter.write(item.getUnit() + ";");
+        fWriter.write(item.getPrice() + ";");
+        fWriter.write("\n");
+        fWriter.close();
     }
 
 
@@ -112,7 +129,7 @@ public class Controller {
         for (Map.Entry<Long, BillList> billList: this.billLists.entrySet()) {
             for (int i = 0; i < idBill.size(); i++) {
                 if (billList.getValue().getBillId() == idBill.get(i))
-                sumBuy = sumBuy + billList.getValue().getPurchaseAmount();
+                sumBuy = sumBuy + billList.getValue().getPrice();
             }
         }
 
