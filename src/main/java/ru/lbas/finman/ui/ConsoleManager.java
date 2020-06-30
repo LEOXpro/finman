@@ -7,9 +7,13 @@ import java.util.*;
 
 import ru.lbas.finman.controller.Controller;
 import ru.lbas.finman.domain.entity.*;
+import ru.lbas.finman.service.impl.IncomeService;
+import ru.lbas.finman.service.impl.IncomeServiceImpl;
 
 public class ConsoleManager {
     private Scanner ln;
+    private IncomeService incService = new IncomeServiceImpl();
+
     private Controller controller;
     private Bill bill;
     private BillList billList;
@@ -31,8 +35,8 @@ public class ConsoleManager {
         System.out.println("3 - Удалить чек");
         System.out.println("4 - Добавить товар в чек");
         System.out.println("5 - Удалить товар из чека");
-        System.out.println("6 - Добавить приход");
-        System.out.println("7 - Удалить приход");
+        System.out.println("6 - Добавить доход");
+        System.out.println("7 - Удалить доход");
         System.out.println("8 - Показать список товаров за дату");
         System.out.println("9 - Показать список товаров за месяц");
         System.out.println("10 - Показать баланс за месяц");
@@ -243,16 +247,20 @@ public class ConsoleManager {
             e.printStackTrace();
         }
         if (des == 2)
-            income = new Income(new Date(), amount, name);
+            incService.create(new Date(), amount, name);
+           //  income = new Income(new Date(), amount, name);
         else if (des == 1)
-            income = new Income(new Date(), amount, name, descript);
-        this.controller.addIncome(income.getId(), income);
+            incService.create(new Date(), amount, name, descript);
+
+           // income = new Income(new Date(), amount, name, descript);
+           // incService.create(income);
+           // this.controller.addIncome(income.getId(), income);
     }
     public void deliteIncome() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id дохода, который хотите удалить");
         Long idIncome = Long.parseLong(reader.readLine());
-        this.controller.deliteIncome(idIncome);
+         this.controller.deliteIncome(idIncome);
     }
     public void veiwInfoItemsDate() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -280,7 +288,7 @@ public class ConsoleManager {
         this.controller.veiwBalanceMonth(calendar);
     }
     public void viewAllIncome(){
-
+        incService.view();
     }
     public void readFileWrite() throws Exception{
         this.controller.readFileWrite();
