@@ -7,25 +7,25 @@ import java.util.*;
 
 import ru.lbas.finman.controller.Controller;
 import ru.lbas.finman.domain.entity.*;
+import ru.lbas.finman.service.BillListService;
+import ru.lbas.finman.service.BillService;
+import ru.lbas.finman.service.ItemService;
+import ru.lbas.finman.service.impl.*;
 import ru.lbas.finman.service.impl.IncomeService;
-import ru.lbas.finman.service.impl.IncomeServiceImpl;
 
 public class ConsoleManager {
     private Scanner ln;
-    private IncomeService incService = new IncomeServiceImpl();
+    private IncomeService incomeService = new IncomeServiceImpl();
+    private BillService billService = new BillServiceImpl();
+    private BillListService billListService = new BillListServiceImpl();
+    private ItemService itemService = new ItemServiceImpl();
 
-    private Controller controller;
-    private Bill bill;
-    private BillList billList;
-    private Item item;
-    private Income income;
     private Map<Long, Bill> bills = new HashMap();
     private Map<Long, BillList> billLists = new HashMap();
     public static Integer des = 0;
 
     public ConsoleManager() throws Exception{
         this.ln = new Scanner(System.in);
-        this.controller = new Controller();
     }
 
 
@@ -118,22 +118,29 @@ public class ConsoleManager {
      * Метод отображения списка товаров из справочника (Item)
      */
     private void viewItems() throws Exception{
-        this.controller.viewItems();
-            }  // сделать позже
+        itemService.viewItems();
+        // this.controller.viewItems();
+            }
     private void createBill() throws Exception {
-        bill = new Bill(new Date());
-        this.controller.createBill(bill.getId(), bill);
+        Bill bill = new Bill(new Date());
+        billService.createBill(bill);
         createBillList(bill.getId());
+
+        // this.controller.createBill(bill.getId(), bill);
+        //НЕ СДЕЛАНО  createBillList(bill.getId());
     }
     private void deliteBill() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id счета, который хотите удалить");
         Long idBill = Long.parseLong(reader.readLine());
-        this.controller.deliteBill(idBill);
-    }           // удаление чека
+        billService.deliteBill(idBill);
+       // this.controller.deliteBill(idBill);
+    }
 
     private void createBillList(Long id) throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BillList billList = null;
+        Item item = null;
         while (true) {
             item = createItem();
             System.out.println("Введите кол-во ед. товара, если оно известно или введите - 0, если неизвестно");
@@ -144,19 +151,16 @@ public class ConsoleManager {
                 Double resultPrice = des * item.getPrice();
                 billList = new BillList(id, item.getId(), des, resultPrice);
             }
-            this.controller.createBillList(billList.getId(), billList);
+            billListService.createBillList(billList);
+
+            // this.controller.createBillList(billList.getId(), billList);
             System.out.println("Добавить еще товар? 1 - Да; 2 - Нет");
             int x = Integer.parseInt(reader.readLine());
             if (x == 2)
                 break;
         }
     }
-    public void deliteBillList() throws Exception{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Введите id позиции в чеке, которую хотите удалить");
-        Long idBillList = Long.parseLong(reader.readLine());
-        this.controller.deliteBillList(idBillList);
-    }
+
     private void addItemBillList() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id счета, в который нужно добавить товар");
@@ -164,7 +168,16 @@ public class ConsoleManager {
         createBillList(id);
     }
 
+    public void deliteBillList() throws Exception{
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Введите id позиции в чеке, которую хотите удалить");
+        Long idBillList = Long.parseLong(reader.readLine());
+        billListService.deliteBillList(idBillList);
+       //  this.controller.deliteBillList(idBillList);
+    }
+
     private Item createItem() throws Exception {
+        Item item = null;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите наименование товара");
         String nameItem = reader.readLine();
@@ -214,7 +227,10 @@ public class ConsoleManager {
              item = new Item(nameItem, edIzm, price);
         else if (des == 1)
              item = new Item(nameItem, edIzm, descript, price);
-        this.controller.addItem(item.getId(), item);
+
+        itemService.createItem(item);
+
+       // this.controller.addItem(item.getId(), item);
 
         return item;
     }
@@ -246,21 +262,22 @@ public class ConsoleManager {
         catch (Exception e){
             e.printStackTrace();
         }
+        Income income = null;
         if (des == 2)
-            incService.create(new Date(), amount, name);
-           //  income = new Income(new Date(), amount, name);
+              income = new Income(new Date(), amount, name);
         else if (des == 1)
-            incService.create(new Date(), amount, name, descript);
+              income = new Income(new Date(), amount, name, descript);
+        incomeService.createIncome(income);
 
-           // income = new Income(new Date(), amount, name, descript);
-           // incService.create(income);
-           // this.controller.addIncome(income.getId(), income);
+       // this.controller.addIncome(income.getId(), income);
     }
     public void deliteIncome() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id дохода, который хотите удалить");
         Long idIncome = Long.parseLong(reader.readLine());
-         this.controller.deliteIncome(idIncome);
+        incomeService.deliteIncome(idIncome);
+
+        // this.controller.deliteIncome(idIncome);
     }
     public void veiwInfoItemsDate() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -275,22 +292,29 @@ public class ConsoleManager {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month-1);
         calendar.set(Calendar.DAY_OF_MONTH, day);
-        this.controller.veiwInfoBillLists1(calendar);
+
+        billListService.veiwInfoBillListDay1(calendar, billService);
+        // this.controller.veiwInfoBillLists1(calendar);
     }
     public void veiwInfoItemsMonth() throws Exception{
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
-        this.controller.veiwInfoBillLists2(calendar);
+        billListService.veiwInfoBillListDay2(calendar, billService);
+
+        // this.controller.veiwInfoBillLists2(calendar);
     }
     public void viewBalanceMonth(){
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
-        this.controller.veiwBalanceMonth(calendar);
+
+        incomeService.veiwBalanceMonth(calendar, billService, billListService);
+       // this.controller.veiwBalanceMonth(calendar);
     }
     public void viewAllIncome(){
-        incService.view();
+        incomeService.viewIncomes();
     }
     public void readFileWrite() throws Exception{
-        this.controller.readFileWrite();
+
+       // this.controller.readFileWrite();
     }
 }

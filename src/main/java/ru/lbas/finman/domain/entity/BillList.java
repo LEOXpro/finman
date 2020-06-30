@@ -26,6 +26,9 @@ public class BillList {
         this.itemId = itemId;
         this.price = price;
     }
+    public BillList(){
+
+    }
 
     public Long getId() {
         return id;

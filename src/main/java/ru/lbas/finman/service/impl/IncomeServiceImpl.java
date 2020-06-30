@@ -1,40 +1,66 @@
 package ru.lbas.finman.service.impl;
 
+import ru.lbas.finman.domain.entity.Bill;
+import ru.lbas.finman.domain.entity.BillList;
 import ru.lbas.finman.domain.entity.Income;
+import ru.lbas.finman.service.BillListService;
+import ru.lbas.finman.service.BillService;
 import ru.lbas.finman.service.impl.IncomeService;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class IncomeServiceImpl implements IncomeService {
-    private Income income;
     private Map<Long, Income> incomes = new HashMap();
-
-
-
-    public void create(Date date, Double amount, String name){
-        income = new Income(date, amount, name);
+    public void createIncome(Income income){
+        // какой-то код
         incomes.put(income.getId(), income);
     }
-    public void create(Date date, Double amount, String name, String description){
-        income = new Income(date, amount, name, description);
-        incomes.put(income.getId(), income);
+    public void deliteIncome(Long idIncome){
+        incomes.remove(idIncome);
     }
-
-    public void delite(){
-
-    }
-    public void view(){
-        for (Map.Entry<Long, Income> incomes: incomes.entrySet()){
-            Date date = incomes.getValue().getDate();
-            String name = incomes.getValue().getName();
-            String descript = incomes.getValue().getDescription();
-            Double amount = incomes.getValue().getAmount();
-            System.out.println(date + " " + name + " " + descript + " " + amount);
+    public void viewIncomes(){
+        for (Map.Entry<Long,Income> inc: incomes.entrySet()){
+            Date date = inc.getValue().getDate();
+            Long id = inc.getValue().getId();
+            String name = inc.getValue().getName();
+            String descr = inc.getValue().getDescription();
+            Double amount = inc.getValue().getAmount();
+            System.out.println(date + " " + id + " " + name + " " + descr + " " + amount);
         }
     }
+    public void veiwBalanceMonth(Calendar cal, BillService billService, BillListService billListService){
+        Calendar calendar = new GregorianCalendar();
+        BillServiceImpl billServiceImp = (BillServiceImpl) billService;
+        Map<Long, Bill> bills = new HashMap(billServiceImp.getBills());
+        Double sumBuy = 0.0;
+        Double sumIncome = 0.0;
+        Double balance = 0.0;
+        ArrayList<Long> idBill = new ArrayList();
+        for (Map.Entry<Long, Bill> bills1: bills.entrySet()){
+            Date ff = bills1.getValue().getBillDate();
+            calendar.setTime(ff);
+            if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) {
+                idBill.add(bills1.getKey());
+            }
+        }
+        BillListServiceImpl billListServiceImp = (BillListServiceImpl) billListService;
+        Map<Long, BillList> billLists = new HashMap(billListServiceImp.getBillLists());
+        for (Map.Entry<Long, BillList> billList: billLists.entrySet()) {
+            for (int i = 0; i < idBill.size(); i++) {
+                if (billList.getValue().getBillId() == idBill.get(i))
+                    sumBuy = sumBuy + billList.getValue().getPrice();
+            }
+        }
 
+        for (Map.Entry<Long, Income> incomes: incomes.entrySet()){
+            Date ff = incomes.getValue().getDate();
+            calendar.setTime(ff);
+            if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) {
+                sumIncome = sumIncome + incomes.getValue().getAmount();
+            }
+        }
+        balance = sumIncome - sumBuy;
+        System.out.println("Баланс за текущий месяц: " + balance);
+    }
 }
 
