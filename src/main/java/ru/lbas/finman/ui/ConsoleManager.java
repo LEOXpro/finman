@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import ru.lbas.finman.controller.Controller;
 import ru.lbas.finman.domain.entity.*;
 import ru.lbas.finman.service.BillListService;
 import ru.lbas.finman.service.BillService;
@@ -20,8 +19,6 @@ public class ConsoleManager {
     private BillListService billListService = new BillListServiceImpl();
     private ItemService itemService = new ItemServiceImpl();
 
-    private Map<Long, Bill> bills = new HashMap();
-    private Map<Long, BillList> billLists = new HashMap();
     public static Integer des = 0;
 
     public ConsoleManager() throws Exception{
@@ -41,13 +38,13 @@ public class ConsoleManager {
         System.out.println("9 - Показать список товаров за месяц");
         System.out.println("10 - Показать баланс за месяц");
         System.out.println("11 - Показать доход за все время");
-        System.out.println("12 - (временный) Тест чтения из файла");
         System.out.println("0 - Выход");
-        int choice = readInt(0, 12);
+        int choice = readInt(0, 11);
         return choice;
     }
 
-        public void start() {
+        public void start() throws Exception{
+            readFileWrite();
             while (true) {
                 try {
                     Integer choice = menu();
@@ -88,9 +85,6 @@ public class ConsoleManager {
                         case 11:
                             viewAllIncome();
                             break;
-                        case 12:
-                            readFileWrite();
-                            break;
                         default:
                             throw new AssertionError();
                     }
@@ -119,22 +113,17 @@ public class ConsoleManager {
      */
     private void viewItems() throws Exception{
         itemService.viewItems();
-        // this.controller.viewItems();
             }
     private void createBill() throws Exception {
         Bill bill = new Bill(new Date());
         billService.createBill(bill);
         createBillList(bill.getId());
-
-        // this.controller.createBill(bill.getId(), bill);
-        //НЕ СДЕЛАНО  createBillList(bill.getId());
     }
     private void deliteBill() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id счета, который хотите удалить");
         Long idBill = Long.parseLong(reader.readLine());
         billService.deliteBill(idBill);
-       // this.controller.deliteBill(idBill);
     }
 
     private void createBillList(Long id) throws Exception{
@@ -152,8 +141,6 @@ public class ConsoleManager {
                 billList = new BillList(id, item.getId(), des, resultPrice);
             }
             billListService.createBillList(billList);
-
-            // this.controller.createBillList(billList.getId(), billList);
             System.out.println("Добавить еще товар? 1 - Да; 2 - Нет");
             int x = Integer.parseInt(reader.readLine());
             if (x == 2)
@@ -173,7 +160,6 @@ public class ConsoleManager {
         System.out.println("Введите id позиции в чеке, которую хотите удалить");
         Long idBillList = Long.parseLong(reader.readLine());
         billListService.deliteBillList(idBillList);
-       //  this.controller.deliteBillList(idBillList);
     }
 
     private Item createItem() throws Exception {
@@ -229,9 +215,6 @@ public class ConsoleManager {
              item = new Item(nameItem, edIzm, descript, price);
 
         itemService.createItem(item);
-
-       // this.controller.addItem(item.getId(), item);
-
         return item;
     }
 
@@ -241,7 +224,6 @@ public class ConsoleManager {
         String name = reader.readLine();
         System.out.println("Введите сумму дохода");
         Double amount = Double.parseDouble(reader.readLine());
-
         System.out.println("Хотите добавить описание дохода? (1 - Да; 2 - Нет)");
         String descript = null;
         des = 0;
@@ -268,16 +250,12 @@ public class ConsoleManager {
         else if (des == 1)
               income = new Income(new Date(), amount, name, descript);
         incomeService.createIncome(income);
-
-       // this.controller.addIncome(income.getId(), income);
     }
     public void deliteIncome() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id дохода, который хотите удалить");
         Long idIncome = Long.parseLong(reader.readLine());
         incomeService.deliteIncome(idIncome);
-
-        // this.controller.deliteIncome(idIncome);
     }
     public void veiwInfoItemsDate() throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -294,27 +272,22 @@ public class ConsoleManager {
         calendar.set(Calendar.DAY_OF_MONTH, day);
 
         billListService.veiwInfoBillListDay1(calendar, billService);
-        // this.controller.veiwInfoBillLists1(calendar);
     }
     public void veiwInfoItemsMonth() throws Exception{
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         billListService.veiwInfoBillListDay2(calendar, billService);
-
-        // this.controller.veiwInfoBillLists2(calendar);
     }
     public void viewBalanceMonth(){
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
 
         incomeService.veiwBalanceMonth(calendar, billService, billListService);
-       // this.controller.veiwBalanceMonth(calendar);
     }
     public void viewAllIncome(){
         incomeService.viewIncomes();
     }
     public void readFileWrite() throws Exception{
-
-       // this.controller.readFileWrite();
+        itemService.readFileWrite();
     }
 }

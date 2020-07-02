@@ -27,6 +27,19 @@ public class Item {
         this.unit = unit;
         this.price = price;
     }
+    public Item(Long id, String name, String unit, String description, Double price) {
+        this.id = id;
+        this.name = name;
+        this.unit = unit;
+        this.description = description;
+        this.price = price;
+    }
+    public Item(Long id, String name, String unit, Double price) {
+        this.id = id;
+        this.name = name;
+        this.unit = unit;
+        this.price = price;
+    }
 
 
     public Long getId() {
