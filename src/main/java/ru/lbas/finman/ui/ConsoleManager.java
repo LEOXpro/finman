@@ -1,32 +1,42 @@
 package ru.lbas.finman.ui;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.*;
-
-import ru.lbas.finman.domain.entity.*;
+import ru.lbas.finman.domain.entity.Bill;
+import ru.lbas.finman.domain.entity.BillList;
+import ru.lbas.finman.domain.entity.Income;
+import ru.lbas.finman.domain.entity.Item;
 import ru.lbas.finman.service.BillListService;
 import ru.lbas.finman.service.BillService;
 import ru.lbas.finman.service.ItemService;
-import ru.lbas.finman.service.impl.*;
+import ru.lbas.finman.service.impl.BillListServiceImpl;
+import ru.lbas.finman.service.impl.BillServiceImpl;
 import ru.lbas.finman.service.impl.IncomeService;
+import ru.lbas.finman.service.impl.IncomeServiceImpl;
+import ru.lbas.finman.service.impl.ItemServiceImpl;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 public class ConsoleManager {
-    private Scanner ln;
+    private Scanner ln; // ln - Ничего неговорящее наименование переменной.
     private IncomeService incomeService = new IncomeServiceImpl();
     private BillService billService = new BillServiceImpl();
     private BillListService billListService = new BillListServiceImpl();
     private ItemService itemService = new ItemServiceImpl();
 
-    public static Integer des = 0;
+    public static Integer des = 0; // что за переменная, почему она используется в разных методах?
+    // Есть смысл подобную переменную объявлять в каждом методе по месту использования?
 
-    public ConsoleManager() throws Exception{
+    public ConsoleManager() throws Exception {
         this.ln = new Scanner(System.in);
     }
 
 
-    public  int menu() {
+    public int menu() {
         System.out.println("1 - Показать список товаров");
         System.out.println("2 - Создать чек");
         System.out.println("3 - Удалить чек");
@@ -43,90 +53,92 @@ public class ConsoleManager {
         return choice;
     }
 
-        public void start() throws Exception{
-            readFileWrite();
-            while (true) {
-                try {
-                    Integer choice = menu();
-                    switch (choice) {
-                        case 0:
-                            System.exit(0);
-                            break;
-                        case 1:
-                            viewItems();
-                            break;
-                        case 2:
-                            createBill();
-                            break;
-                        case 3:
-                            deliteBill();
-                            break;
-                        case 4:
-                            addItemBillList();
-                            break;
-                        case 5:
-                            deliteBillList();
-                            break;
-                        case 6:
-                            addIncome();
-                            break;
-                        case 7:
-                            deliteIncome();
-                            break;
-                        case 8:
-                            veiwInfoItemsDate();
-                            break;
-                        case 9:
-                            veiwInfoItemsMonth();
-                            break;
-                        case 10:
-                            viewBalanceMonth();
-                            break;
-                        case 11:
-                            viewAllIncome();
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                }catch (Exception e) {
-                    e.printStackTrace();
+    public void start() throws Exception {
+        readFileWrite();
+        while (true) {
+            try {
+                Integer choice = menu();
+                switch (choice) {
+                    case 0:
+                        System.exit(0);
+                        break;
+                    case 1:
+                        viewItems();
+                        break;
+                    case 2:
+                        createBill();
+                        break;
+                    case 3:
+                        deliteBill();
+                        break;
+                    case 4:
+                        addItemBillList();
+                        break;
+                    case 5:
+                        deliteBillList();
+                        break;
+                    case 6:
+                        addIncome();
+                        break;
+                    case 7:
+                        deliteIncome();
+                        break;
+                    case 8:
+                        veiwInfoItemsDate();
+                        break;
+                    case 9:
+                        veiwInfoItemsMonth();
+                        break;
+                    case 10:
+                        viewBalanceMonth();
+                        break;
+                    case 11:
+                        viewAllIncome();
+                        break;
+                    default:
+                        throw new AssertionError();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+    }
 
-        private  int readInt(int min, int max){
-            int choice;
-                while (true) {
-                    try {
-                        choice = Integer.parseInt(ln.nextLine());
-                        if (choice >= min && choice <= max)
-                            break;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                return choice;
+    private int readInt(int min, int max) {
+        int choice;
+        while (true) {
+            try {
+                choice = Integer.parseInt(ln.nextLine());
+                if (choice >= min && choice <= max)
+                    break;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+        return choice;
+    }
 
     /**
      * Метод отображения списка товаров из справочника (Item)
      */
-    private void viewItems() throws Exception{
+    private void viewItems() throws Exception {
         itemService.viewItems();
-            }
+    }
+
     private void createBill() throws Exception {
         Bill bill = new Bill(new Date());
         billService.createBill(bill);
         createBillList(bill.getId());
     }
-    private void deliteBill() throws Exception{
+
+    private void deliteBill() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id счета, который хотите удалить");
         Long idBill = Long.parseLong(reader.readLine());
         billService.deliteBill(idBill);
     }
 
-    private void createBillList(Long id) throws Exception{
+    private void createBillList(Long id) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         BillList billList = null;
         Item item = null;
@@ -141,10 +153,13 @@ public class ConsoleManager {
                 billList = new BillList(id, item.getId(), des, resultPrice);
             }
             billListService.createBillList(billList);
+            // 1 - Да; 2 - Нет - повторяется часто. Лучше сделать enum YES, NO с числовыми кодами и расшифровкой на русском
+            // и далее их использовать в выводе, подобном тому, что ниже
             System.out.println("Добавить еще товар? 1 - Да; 2 - Нет");
             int x = Integer.parseInt(reader.readLine());
-            if (x == 2)
+            if (x == 2) { // фигурные скобки ставятся всегда
                 break;
+            }
         }
     }
 
@@ -155,7 +170,7 @@ public class ConsoleManager {
         createBillList(id);
     }
 
-    public void deliteBillList() throws Exception{
+    private void deliteBillList() throws Exception { // здесь и далее - private
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id позиции в чеке, которую хотите удалить");
         Long idBillList = Long.parseLong(reader.readLine());
@@ -177,15 +192,15 @@ public class ConsoleManager {
                 else
                     System.out.println("Неверно, введите '1' (кг.) или '2' (шт.)");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         String edIzm;
-        if (ed == 1)
+        if (ed == 1) {
             edIzm = "кг.";
-        else
+        } else {
             edIzm = "шт.";
+        }
         System.out.println("Введите стоимость за единицу товара:");
         Double price = Double.parseDouble(reader.readLine());
 
@@ -200,25 +215,23 @@ public class ConsoleManager {
                     System.out.println("Введите описание товара");
                     descript = reader.readLine();
                     break;
-                }
-                else
+                } else
                     System.out.println("Неверно, введите '1' (Да) или '2' (Нет)");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (des == 2)
-             item = new Item(nameItem, edIzm, price);
+            item = new Item(nameItem, edIzm, price);
         else if (des == 1)
-             item = new Item(nameItem, edIzm, descript, price);
+            item = new Item(nameItem, edIzm, descript, price);
 
         itemService.createItem(item);
         return item;
     }
 
-    public void addIncome() throws Exception{
+    public void addIncome() throws Exception {
         System.out.println("Введите наименование дохода");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name = reader.readLine();
@@ -236,28 +249,28 @@ public class ConsoleManager {
                     System.out.println("Введите описание дохода");
                     descript = reader.readLine();
                     break;
-                }
-                else
+                } else
                     System.out.println("Неверно, введите '1' (Да) или '2' (Нет)");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Income income = null;
-        if (des == 2)
-              income = new Income(new Date(), amount, name);
-        else if (des == 1)
-              income = new Income(new Date(), amount, name, descript);
+        Income income = new Income(new Date(), amount, name);
+        if (des == 1) {
+            income.setDescription(descript);
+        }
         incomeService.createIncome(income);
     }
-    public void deliteIncome() throws Exception{
+
+    public void deliteIncome() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите id дохода, который хотите удалить");
         Long idIncome = Long.parseLong(reader.readLine());
         incomeService.deliteIncome(idIncome);
     }
-    public void veiwInfoItemsDate() throws Exception{
+
+    public void veiwInfoItemsDate() throws Exception {
+        // сложно. Нужно дать ввести дату строкой в формате ДД.ММ.ГГГГ, потом перевести строку в дату
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите дату, за которую хотите посмотреть покупки");
         System.out.println("Введите год");
@@ -268,26 +281,30 @@ public class ConsoleManager {
         int day = Integer.parseInt(reader.readLine());
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, day);
 
         billListService.veiwInfoBillListDay1(calendar, billService);
     }
-    public void veiwInfoItemsMonth() throws Exception{
+
+    public void veiwInfoItemsMonth() throws Exception {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         billListService.veiwInfoBillListDay2(calendar, billService);
     }
-    public void viewBalanceMonth(){
+
+    public void viewBalanceMonth() {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
 
         incomeService.veiwBalanceMonth(calendar, billService, billListService);
     }
-    public void viewAllIncome(){
+
+    public void viewAllIncome() {
         incomeService.viewIncomes();
     }
-    public void readFileWrite() throws Exception{
+
+    public void readFileWrite() throws Exception {
         itemService.readFileWrite();
     }
 }

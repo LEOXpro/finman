@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ItemServiceImpl implements ItemService {
     private Map<Long, Item> items;
+    // эти 4 поля, если они не используются между методами, то их по месту надо и определить, т.е. в методе использования
     File itemsFile;
     FileWriter fWriter;
     FileReader fReader;
@@ -26,6 +27,7 @@ public class ItemServiceImpl implements ItemService {
             fWriter = new FileWriter(itemsFile, true);
             fWriter.write(item.getId() + ";");
             fWriter.write(item.getName() + ";");
+            // для if-else скобки надо расставить, а то похоже, что оно не совсем будет так работать
         if (item.getDescription() != null)
             fWriter.write(item.getDescription() + ";");
         else fWriter.write(";");
@@ -64,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         Double priceItem = null;
         Item item = null;
 
-
+//todo сложный и непонятный метод. Надо упростить. Для разделения стринги по символу можно использовать split
         for (int i = 1; i < arrayItems.length; i++){
             char [] arrayCharItem = arrayItems[i].toCharArray();
             for (Integer j = 0; j < arrayCharItem.length; j++) {
@@ -140,6 +142,8 @@ public class ItemServiceImpl implements ItemService {
                String descr = it.getValue().getDescription();
                String unit = it.getValue().getUnit();
                Double price = it.getValue().getPrice();
+                // здесь лучше собирать всё в одну переменную String, переходя на новую строку через \n
+                // после цикла 1 раз сделать вывод на консоль
                 System.out.println(id + " " + name + " " + descr + " " + unit + " " + price);
             }
         }

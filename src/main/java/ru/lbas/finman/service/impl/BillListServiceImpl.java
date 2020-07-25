@@ -11,7 +11,7 @@ import java.util.*;
 public class BillListServiceImpl implements BillListService {
     private Map<Long, BillList> billLists = new HashMap();
 
-    public Map<Long, BillList> getBillLists() {
+    public Map<Long, BillList> getBillLists() { // оформить в интерфейсе
         return billLists;
     }
 
@@ -22,9 +22,10 @@ public class BillListServiceImpl implements BillListService {
         billLists.remove(idBillList);
     }
 
-    public void veiwInfoBillListDay1(Calendar cal, BillService billService) {
-        BillServiceImpl billService1 = (BillServiceImpl)billService;
-        Map<Long, Bill> bills = new HashMap(billService1.getBills());
+    //todo оба метода делают одно и то же, но по разными периодам - надо объединить в один метод
+    public void veiwInfoBillListDay1(Calendar cal, BillService billService) {//
+        //BillServiceImpl billService1 = (BillServiceImpl)billService; // так не надо
+        Map<Long, Bill> bills = billService.getBills();// метод не виден, т.к. отсутствует в interface
         Calendar calendar = new GregorianCalendar();
         for (Map.Entry<Long, Bill> bills1: bills.entrySet()){
             Date ff = bills1.getValue().getBillDate();
@@ -43,7 +44,7 @@ public class BillListServiceImpl implements BillListService {
     }
 
     public void veiwInfoBillListDay2(Calendar cal, BillService billService) {
-        BillServiceImpl billService2 = (BillServiceImpl) billService;
+        BillServiceImpl billService2 = (BillServiceImpl) billService; // аналогично
         Map<Long, Bill> bills = new HashMap(billService2.getBills());
         Calendar calendar = new GregorianCalendar();
         for (Map.Entry<Long, Bill> bills2: bills.entrySet()){

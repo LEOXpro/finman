@@ -25,25 +25,28 @@ public class IncomeServiceImpl implements IncomeService {
             String name = inc.getValue().getName();
             String descr = inc.getValue().getDescription();
             Double amount = inc.getValue().getAmount();
+            // здесь лучше собирать всё в одну переменную String, переходя на новую строку через \n
+            // после цикла 1 раз сделать вывод на консоль
             System.out.println(date + " " + id + " " + name + " " + descr + " " + amount);
         }
     }
     public void veiwBalanceMonth(Calendar cal, BillService billService, BillListService billListService){
         Calendar calendar = new GregorianCalendar();
-        BillServiceImpl billServiceImp = (BillServiceImpl) billService;
+        BillServiceImpl billServiceImp = (BillServiceImpl) billService; // тоже переделать (метод в интерфейс)
         Map<Long, Bill> bills = new HashMap(billServiceImp.getBills());
         Double sumBuy = 0.0;
         Double sumIncome = 0.0;
         Double balance = 0.0;
         ArrayList<Long> idBill = new ArrayList();
-        for (Map.Entry<Long, Bill> bills1: bills.entrySet()){
+        for (Map.Entry<Long, Bill> bills1: bills.entrySet()){ // bills1 - плохое наименование с цифрой
             Date ff = bills1.getValue().getBillDate();
             calendar.setTime(ff);
             if (cal.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) {
-                idBill.add(bills1.getKey());
+                idBill.add(bills1.getKey()); // лучше не сохранять в список, а сделать метод подсчета суммы по чеку и вызывать его здесь
+                // тогда цикла ниже не будет (перейдет в метод)
             }
         }
-        BillListServiceImpl billListServiceImp = (BillListServiceImpl) billListService;
+        BillListServiceImpl billListServiceImp = (BillListServiceImpl) billListService; // тоже переделать (метод в интерфейс)
         Map<Long, BillList> billLists = new HashMap(billListServiceImp.getBillLists());
         for (Map.Entry<Long, BillList> billList: billLists.entrySet()) {
             for (int i = 0; i < idBill.size(); i++) {
