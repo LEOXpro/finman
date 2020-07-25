@@ -1,7 +1,8 @@
 package ru.lbas.finman.service;
 
+import ru.lbas.finman.domain.entity.Bill;
+
 public interface BillService {
-    createBill();
-    deleteBill();
-    addBillList();
+    void createBill(Bill bill);
+    void deliteBill(Long idBill);
 }

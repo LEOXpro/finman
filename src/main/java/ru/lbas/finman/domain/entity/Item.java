@@ -1,5 +1,7 @@
 package ru.lbas.finman.domain.entity;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -10,17 +12,33 @@ public class Item {
     String name;          // имя товара
     String unit;          // ед. измерения (кг, штуки…)
     String description;   // описание
+    Double price;         // цена товара
 
-    public Item(String name, String unit, String description) {
+    public Item(String name, String unit, String description, Double price) {
         this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.unit = unit;
         this.description = description;
+        this.price = price;
     }
-    public Item(String name, String unit) {
+    public Item(String name, String unit, Double price) {
         this.id = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.unit = unit;
+        this.price = price;
+    }
+    public Item(Long id, String name, String unit, String description, Double price) {
+        this.id = id;
+        this.name = name;
+        this.unit = unit;
+        this.description = description;
+        this.price = price;
+    }
+    public Item(Long id, String name, String unit, Double price) {
+        this.id = id;
+        this.name = name;
+        this.unit = unit;
+        this.price = price;
     }
 
 
@@ -40,6 +58,8 @@ public class Item {
         return description;
     }
 
+    public Double getPrice(){ return price;}
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,5 +74,12 @@ public class Item {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setPrice(Double price) { this.price = price; }
+
+    @Override
+    public  String toString(){
+        return this.id + " " + this.name + " " + this.unit + " " + this.description + " " + this.price;
     }
 }
