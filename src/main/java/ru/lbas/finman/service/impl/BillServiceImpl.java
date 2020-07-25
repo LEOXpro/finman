@@ -13,7 +13,7 @@ import java.util.Map;
 public class BillServiceImpl implements BillService {
     private Map<Long, Bill> bills = new HashMap();
 
-    public Map<Long, Bill> getBills() {
+    public Map<Long, Bill> getBills() {//метод объявить в interface
         return bills;
     }
 
